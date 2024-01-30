@@ -145,9 +145,9 @@ void draw()
 			}
 
 			if ((x + y) % 2 == 0)
-				SDL_SetRenderDrawColor(renderer, 200, 100, 0, 255);
+				SDL_SetRenderDrawColor(renderer, 173, 116, 76, 255);
 			else
-				SDL_SetRenderDrawColor(renderer, 240, 240, 240, 255);
+				SDL_SetRenderDrawColor(renderer, 173, 140, 116, 255);
 			
 			if (grabbing_x == x && grabbing_y == y)
 				SDL_SetRenderDrawColor(renderer, 100, 200, 100, 255);
@@ -165,25 +165,230 @@ void draw()
 			if (grabbing_x != -1 && game.get_controlled_tiles(game.board, grabbing_x, grabbing_y)[x][y])
 				draw_circle(rect.x + rect.w / 2, rect.y + rect.h / 2, tile_size / 4, 100, 100, 100, 100);
 			
-			for (int i = 0; i < game.board.get_tile(x, y).type + 1; ++i)
-			{
-				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-				SDL_Rect rect2;
-				rect2.x = window_size[0] / 2 - tile_size * 4 + translated_x * tile_size + 5 + i * 10;
-				rect2.y = window_size[1] / 2 - tile_size * 4 + translated_y * tile_size + 5;
-				rect2.w = 5;
-				rect2.h = 5;
-				SDL_RenderFillRect(renderer, &rect2);
+			Piece piece = game.board.get_tile(x, y);
+			int fill_color = (1 - piece.team) * 255;
+			int outline_color = piece.team * 255;
+			int origin_x = window_size[0] / 2 - tile_size * 4 + translated_x * tile_size;
+			int origin_y = window_size[1] / 2 - tile_size * 4 + translated_y * tile_size;
 
-				if (game.board.get_tile(x, y).team == 0)
-				{
-					SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-					rect2.x += 1;
-					rect2.y += 1;
-					rect2.w -= 2;
-					rect2.h -= 2;
-					SDL_RenderFillRect(renderer, &rect2);
-				}
+			if (piece.type != -1)
+			{
+				SDL_SetRenderDrawColor(renderer, fill_color, fill_color, fill_color, 255);
+				rect.x = origin_x + tile_size * 0.15;
+				rect.y = origin_y + tile_size * 0.85;
+				rect.w = tile_size * 0.7;
+				rect.h = tile_size * 0.05;
+				SDL_RenderFillRect(renderer, &rect);
+				rect.x = origin_x + tile_size * 0.2;
+				rect.y = origin_y + tile_size * 0.8;
+				rect.w = tile_size * 0.6;
+				rect.h = tile_size * 0.1;
+				SDL_RenderFillRect(renderer, &rect);
+				rect.x = origin_x + tile_size * 0.3;
+				rect.y = origin_y + tile_size * 0.75;
+				rect.w = tile_size * 0.4;
+				rect.h = tile_size * 0.15;
+				SDL_RenderFillRect(renderer, &rect);
+
+				rect.x = origin_x + tile_size * 0.45;
+				rect.y = origin_y + tile_size * 0.5;
+				rect.w = tile_size * 0.1;
+				rect.h = tile_size * 0.4;
+				SDL_RenderFillRect(renderer, &rect);
+				rect.x = origin_x + tile_size * 0.425;
+				rect.y = origin_y + tile_size * 0.65;
+				rect.w = tile_size * 0.15;
+				rect.h = tile_size * 0.2;
+				SDL_RenderFillRect(renderer, &rect);
+				rect.x = origin_x + tile_size * 0.38;
+				rect.y = origin_y + tile_size * 0.7;
+				rect.w = tile_size * 0.24;
+				rect.h = tile_size * 0.2;
+				SDL_RenderFillRect(renderer, &rect);
+			}
+
+			switch (piece.type)
+			{
+				case PAWN:
+					rect.x = origin_x + tile_size * 0.39;
+					rect.y = origin_y + tile_size * 0.250;
+					rect.w = tile_size * 0.230;
+					rect.h = tile_size * 0.301;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.350;
+					rect.y = origin_y + tile_size * 0.29;
+					rect.w = tile_size * 0.300;
+					rect.h = tile_size * 0.231;
+					SDL_RenderFillRect(renderer, &rect);
+					break;
+
+				case KNIGHT:
+					rect.x = origin_x + tile_size * 0.45;
+					rect.y = origin_y + tile_size * 0.3;
+					rect.w = tile_size * 0.400;
+					rect.h = tile_size * 0.21;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.35;
+					rect.y = origin_y + tile_size * 0.4;
+					rect.w = tile_size * 0.1;
+					rect.h = tile_size * 0.4;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.32;
+					rect.y = origin_y + tile_size * 0.55;
+					rect.w = tile_size * 0.2;
+					rect.h = tile_size * 0.3;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.4;
+					rect.y = origin_y + tile_size * 0.15;
+					rect.w = tile_size * 0.1;
+					rect.h = tile_size * 0.3;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.45;
+					rect.y = origin_y + tile_size * 0.22;
+					rect.w = tile_size * 0.075;
+					rect.h = tile_size * 0.3;
+					SDL_RenderFillRect(renderer, &rect);
+					break;
+
+				case BISHOP:
+					rect.x = origin_x + tile_size * 0.39;
+					rect.y = origin_y + tile_size * 0.200;
+					rect.w = tile_size * 0.230;
+					rect.h = tile_size * 0.351;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.350;
+					rect.y = origin_y + tile_size * 0.29;
+					rect.w = tile_size * 0.300;
+					rect.h = tile_size * 0.116;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.45;
+					rect.y = origin_y + tile_size * 0.100;
+					rect.w = tile_size * 0.10;
+					rect.h = tile_size * 0.351;
+					SDL_RenderFillRect(renderer, &rect);
+					break;
+
+				case ROOK:
+					rect.x = origin_x + tile_size * 0.15;
+					rect.y = origin_y + tile_size * 0.35;
+					rect.w = tile_size * 0.7;
+					rect.h = tile_size * 0.16;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.15;
+					rect.y = origin_y + tile_size * 0.25;
+					rect.w = tile_size * 0.1;
+					rect.h = tile_size * 0.11;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.35;
+					rect.y = origin_y + tile_size * 0.25;
+					rect.w = tile_size * 0.1;
+					rect.h = tile_size * 0.11;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.55;
+					rect.y = origin_y + tile_size * 0.25;
+					rect.w = tile_size * 0.1;
+					rect.h = tile_size * 0.11;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.75;
+					rect.y = origin_y + tile_size * 0.25;
+					rect.w = tile_size * 0.1;
+					rect.h = tile_size * 0.25;
+					SDL_RenderFillRect(renderer, &rect);
+					break;
+
+				case QUEEN:
+					rect.x = origin_x + tile_size * 0.25;
+					rect.y = origin_y + tile_size * 0.5;
+					rect.w = tile_size * 0.5;
+					rect.h = tile_size * 0.25;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.3;
+					rect.y = origin_y + tile_size * 0.45;
+					rect.w = tile_size * 0.4;
+					rect.h = tile_size * 0.2;
+					SDL_RenderFillRect(renderer, &rect);
+
+					rect.x = origin_x + tile_size * 0.425;
+					rect.y = origin_y + tile_size * 0.3;
+					rect.w = tile_size * 0.15;
+					rect.h = tile_size * 0.3;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.475;
+					rect.y = origin_y + tile_size * 0.2;
+					rect.w = tile_size * 0.05;
+					rect.h = tile_size * 0.3;
+					SDL_RenderFillRect(renderer, &rect);
+
+					rect.x = origin_x + tile_size * 0.25;
+					rect.y = origin_y + tile_size * 0.425;
+					rect.w = tile_size * 0.15;
+					rect.h = tile_size * 0.3;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.3;
+					rect.y = origin_y + tile_size * 0.325;
+					rect.w = tile_size * 0.05;
+					rect.h = tile_size * 0.3;
+					SDL_RenderFillRect(renderer, &rect);
+
+					rect.x = origin_x + tile_size * 0.61;
+					rect.y = origin_y + tile_size * 0.425;
+					rect.w = tile_size * 0.15;
+					rect.h = tile_size * 0.3;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.66;
+					rect.y = origin_y + tile_size * 0.325;
+					rect.w = tile_size * 0.05;
+					rect.h = tile_size * 0.3;
+					SDL_RenderFillRect(renderer, &rect);
+
+					rect.x = origin_x + tile_size * 0.2;
+					rect.y = origin_y + tile_size * 0.5;
+					rect.w = tile_size * 0.61;
+					rect.h = tile_size * 0.15;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.15;
+					rect.y = origin_y + tile_size * 0.55;
+					rect.w = tile_size * 0.71;
+					rect.h = tile_size * 0.05;
+					SDL_RenderFillRect(renderer, &rect);
+					break;
+
+				case KING:
+					rect.x = origin_x + tile_size * 0.25;
+					rect.y = origin_y + tile_size * 0.5;
+					rect.w = tile_size * 0.5;
+					rect.h = tile_size * 0.25;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.3;
+					rect.y = origin_y + tile_size * 0.45;
+					rect.w = tile_size * 0.4;
+					rect.h = tile_size * 0.2;
+					SDL_RenderFillRect(renderer, &rect);
+
+					rect.x = origin_x + tile_size * 0.45;
+					rect.y = origin_y + tile_size * 0.1;
+					rect.w = tile_size * 0.1;
+					rect.h = tile_size * 0.5;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.35;
+					rect.y = origin_y + tile_size * 0.2;
+					rect.w = tile_size * 0.3;
+					rect.h = tile_size * 0.1;
+					SDL_RenderFillRect(renderer, &rect);
+
+					rect.x = origin_x + tile_size * 0.25;
+					rect.y = origin_y + tile_size * 0.35;
+					rect.w = tile_size * 0.1;
+					rect.h = tile_size * 0.2;
+					SDL_RenderFillRect(renderer, &rect);
+					rect.x = origin_x + tile_size * 0.66;
+					rect.y = origin_y + tile_size * 0.35;
+					rect.w = tile_size * 0.1;
+					rect.h = tile_size * 0.2;
+					SDL_RenderFillRect(renderer, &rect);
+
+
+					break;
 			}
 		}
 
